@@ -1,4 +1,7 @@
 from nose.plugins import Plugin
+import logging
+
+log = logging.getLogger(__name__)
 
 class Nostrils(Plugin):
     name = 'nostrils'
@@ -10,4 +13,4 @@ class Nostrils(Plugin):
         super(Nostrils, self).add_options(parser, env)
 
     def addFailure(self, test, err, *args):
-        import pdb; pdb.set_trace()
+        pass

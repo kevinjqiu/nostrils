@@ -1,7 +1,7 @@
 import logging
 from wsgiref.simple_server import make_server
-from pynotify import Notification
 from functools import wraps
+from nostrils.server.notify import send_notification
 
 log = logging.getLogger(__name__)
 
@@ -19,8 +19,8 @@ def handles(route):
 @handles(('POST', '/fail'))
 def on_fail(environ, response):
     body = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
-    Notification('Error', body).show()
-    response('200 OK', body=['Error notified'])
+    send_notification('Error', body)
+    return response('200 OK', body=['Error notified'])
 
 @handles(('GET', '/ping'))
 def ping(environ, response):
@@ -38,8 +38,8 @@ def nostril_server(environ, start_response):
         handler = ROUTE_MAP[(method, path)]
         return handler(environ, response)
     else:
-        response('404 Not Found')
+        return response('404 Not Found')
 
-if __name__ == '__main__':
-    # for local testing
-    make_server('localhost', 8000, nostril_server).serve_forever()
+def start_server(port):
+    make_server('localhost', port, nostril_server).serve_forever()
+    log.info('Nostril server started on port %d' % port)

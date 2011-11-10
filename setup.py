@@ -20,5 +20,6 @@ setup(name='nostrils',
       install_requires=[
           # -*- Extra requirements: -*-
       ],
-      entry_points={'nose.plugins':['nostrils=nostrils:Nostrils']}
+      entry_points={'nose.plugins':['nostrils=nostrils:Nostrils'],
+              'console_scripts':['nostrils_server=nostrils.server:main']}
       )

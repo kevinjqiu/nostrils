@@ -4,6 +4,8 @@ from functools import wraps
 from nostrils.server.notify import send_notification
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
+log.addHandler(logging.StreamHandler())
 
 ROUTE_MAP = {}
 
@@ -41,5 +43,8 @@ def nostril_server(environ, start_response):
         return response('404 Not Found')
 
 def start_server(port):
-    make_server('localhost', port, nostril_server).serve_forever()
     log.info('Nostril server started on port %d' % port)
+    try:
+        make_server('localhost', port, nostril_server).serve_forever()
+    except KeyboardInterrupt:
+        log.info('Nostril server terminated by user request')

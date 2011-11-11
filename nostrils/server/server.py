@@ -1,4 +1,5 @@
 import logging
+import json
 from wsgiref.simple_server import make_server
 from functools import wraps
 from nostrils.server.notify import send_notification
@@ -21,8 +22,14 @@ def handles(route):
 @handles(('POST', '/fail'))
 def on_fail(environ, response):
     body = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
-    send_notification('Error', body)
-    return response('200 OK', body=['Error notified'])
+    try:
+        info = json.loads(body)
+        title = ": ".join((info['type'], info['test_name']))
+        send_notification(title, info['top_stackframe'])
+        return response('200 OK', body=['Error notified'])
+    except:
+        log.info('Bad content received: "%s"' % body)
+        return response('500 Internal Server Error', [''])
 
 @handles(('GET', '/ping'))
 def ping(environ, response):

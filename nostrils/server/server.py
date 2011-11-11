@@ -24,12 +24,14 @@ def on_fail(environ, response):
     body = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
     try:
         info = json.loads(body)
-        title = ": ".join((info['type'], info['test_name']))
-        send_notification(title, info['top_stackframe'])
-        return response('200 OK', body=['Error notified'])
     except:
         log.info('Bad content received: "%s"' % body)
-        return response('500 Internal Server Error', [''])
+        return response('500 Internal Server Error', body=['Cannot parse the object sent'])
+    else:
+        title = ": ".join((info['type'], info['test_name']))
+        # file_, method, line = info['top_stackframe']
+        send_notification(title, " ".join(map(str, info['top_stackframe'])))
+        return response('200 OK', body=['Error notified'])
 
 @handles(('GET', '/ping'))
 def ping(environ, response):

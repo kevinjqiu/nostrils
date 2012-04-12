@@ -27,7 +27,6 @@ class Nostrils(Plugin):
         while frame is not None:
             filename, lineno = frame.f_code.co_filename, frame.f_lineno
             if filename.endswith('worker.py'):
-                print self._current_test
                 self._data[filename][lineno].append(self._current_test)
 
             frame = frame.f_back

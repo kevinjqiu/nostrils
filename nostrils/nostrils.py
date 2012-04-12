@@ -23,10 +23,7 @@ class Nostrils(Plugin):
         if self.enabled:
             pass
 
-    def _print_trace(self, frame):
-        # f_code = self._current_test.__call__.func_code
-
-        indent = 0
+    def _trace_down(self, frame):
         while frame is not None:
             filename, lineno = frame.f_code.co_filename, frame.f_lineno
             if filename.endswith('worker.py'):
@@ -34,11 +31,10 @@ class Nostrils(Plugin):
                 self._data[filename][lineno].append(self._current_test)
 
             frame = frame.f_back
-            indent += 1
 
     def _trace(self, frame, event, args):
         if event == 'line':
-            self._print_trace(frame)
+            self._trace_down(frame)
         return self._trace
 
     def _print(self):
@@ -70,7 +66,8 @@ class Nostrils(Plugin):
         self._print()
 
     def _install_tracefn(self):
+        self._orig_tracefn = sys.gettrace()
         sys.settrace(self._trace)
 
     def _restore_tracefn(self):
-        sys.settrace(None) # TODO be a good citizen
+        sys.settrace(self._orig_tracefn)

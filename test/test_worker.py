@@ -8,3 +8,8 @@ def test_add___negative():
 
 def test_subtract():
     assert 0 == worker.subtract(0, 0)
+
+class TestFoo(object):
+
+    def test_add(self):
+        assert 5 == worker.add(5, 0)

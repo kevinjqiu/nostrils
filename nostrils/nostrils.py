@@ -1,7 +1,12 @@
+import sys
 import logging
 from nose.plugins import Plugin
 
 log = logging.getLogger(__name__)
+
+def trace_fn(frame, event, args):
+    print event, args
+    return trace_fn
 
 class Nostrils(Plugin):
     name = 'nostrils'
@@ -9,20 +14,28 @@ class Nostrils(Plugin):
     def configure(self, options, conf):
         super(Nostrils, self).configure(options, conf)
         if self.enabled:
-            try:
-                import coverage
-            except ImportError:
-                log.error('Coverage not available:unable to import coverage module')
-                self.enabled = False
-                return
-            self.conf = conf
-
-            if self.enabled:
-                self.coverage_instance = coverage.coverage(auto_data=False)
+            pass
 
     def add_options(self, parser, env=None):
         super(Nostrils, self).add_options(parser, env)
 
-    def begin(self):
-        self.coverage_instance.load()
-        self.coverage_instance.start()
+    def addError(self, test, err, *a):
+        self._restore_tracefn()
+
+    def addFailure(self, test, err):
+        self._restore_tracefn()
+
+    def addSkip(self, test, err):
+        self._restore_tracefn()
+
+    def addSuccess(self, test, err):
+        self._restore_tracefn()
+
+    def startTest(self, test):
+        self._install_tracefn(trace_fn)
+
+    def _install_tracefn(self, tracefn):
+        sys.settrace(tracefn)
+
+    def _restore_tracefn(self):
+        sys.settrace(None) # TODO be a good citizen

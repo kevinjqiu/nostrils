@@ -1,14 +1,10 @@
 import linecache
-
-import os
 import sys
 import logging
 from nose.plugins import Plugin
-from collections import defaultdict
+from collector import TraceCollector
 
 log = logging.getLogger(__name__)
-
-CWD = os.getcwd()
 
 class Tracer(object):
 
@@ -31,34 +27,6 @@ class Tracer(object):
 
     def stop(self):
         sys.settrace(self._old_tracefn)
-
-class TraceCollector(object):
-
-    def __init__(self, whitelist=[]):
-        # { filename : { lineno : [test_case_name] }}
-        self._data = defaultdict(
-            lambda : defaultdict(
-                lambda : set([])
-            )
-        )
-        self._whitelist = whitelist
-
-    def should_collect(self, frame):
-        if self._whitelist == '*':
-            return True
-
-        filename = frame.f_code.co_filename
-
-        for folder in self._whitelist:
-            if filename.startswith(os.path.join(CWD, folder)):
-                return True
-
-        return False
-
-    def collect(self, frame):
-        filename, lineno = frame.f_code.co_filename, frame.f_lineno
-        if self.should_collect(frame):
-            self._data[filename][lineno].add(self._current_test.address())
 
 class Nostrils(Plugin):
 
@@ -83,9 +51,10 @@ class Nostrils(Plugin):
             print "File: %s" % filename
             for lineno in sorted(data[filename].keys()):
                 line = linecache.getline(filename, lineno)
-                tests = ["%s:%s.%s" % (file_, module, func) for file_, module, func in data[filename][lineno]]
-                print "  %s" % line
-                print "  %s:%s" % (lineno, tests)
+                # print "  %s:%s" % (lineno, data[filename][lineno])
+                print "  %s: %s" % (lineno, line.rstrip())
+                for testid in data[filename][lineno]:
+                    print "    * %s" % testid
                 print "\n"
 
     def add_options(self, parser, env=None):
@@ -113,3 +82,4 @@ class Nostrils(Plugin):
 
     def finalize(self, result):
         self._print()
+        self._collector.save()

@@ -1,3 +1,4 @@
 *.pyc
 .ropeproject/
 nostrils.egg-info/
+env

@@ -51,10 +51,9 @@ class Nostrils(Plugin):
             print "File: %s" % filename
             for lineno in sorted(data[filename].keys()):
                 line = linecache.getline(filename, lineno)
-                # print "  %s:%s" % (lineno, data[filename][lineno])
-                print "  %s: %s" % (lineno, line.rstrip())
+                print "%s%s: %s" % (' '*2, lineno, line.rstrip())
                 for testid in data[filename][lineno]:
-                    print "    * %s" % testid
+                    print "%s* %s" % (' '*4, testid)
                 print "\n"
 
     def add_options(self, parser, env=None):

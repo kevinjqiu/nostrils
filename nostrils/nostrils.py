@@ -1,3 +1,5 @@
+import linecache
+
 import os
 import sys
 import logging
@@ -80,12 +82,15 @@ class Nostrils(Plugin):
         for filename in data:
             print "File: %s" % filename
             for lineno in sorted(data[filename].keys()):
+                line = linecache.getline(filename, lineno)
                 tests = ["%s:%s.%s" % (file_, module, func) for file_, module, func in data[filename][lineno]]
+                print "  %s" % line
                 print "  %s:%s" % (lineno, tests)
+                print "\n"
 
     def add_options(self, parser, env=None):
         super(Nostrils, self).add_options(parser, env)
-        parser.add_option('--nostril-whitelist',
+        parser.add_option('--nostrils-whitelist',
             dest='whitelist',
             help='A comma separated list of top-level folders to be included, or "*" indicating "all".',
             default='*')

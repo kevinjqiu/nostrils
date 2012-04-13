@@ -7,7 +7,7 @@ A Sample Run
 ------------
 
 ```bash
-[master ✓] $ nosetests --with-nostrils  -s --nostril-whitelist=sample
+[master ✓] $ nosetests --with-nostrils  -s --nostrils-whitelist=sample
 .....
 ----------------------------------------------------------------------
 Ran 5 tests in 0.019s

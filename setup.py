@@ -5,7 +5,7 @@ version = '0.1'
 
 setup(name='nostrils',
       version=version,
-      description="Notify user of test failures while nosetests is running",
+      description="Gather test-line mapping from test runs.",
       long_description="""\
 """,
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -18,8 +18,8 @@ setup(name='nostrils',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          # -*- Extra requirements: -*-
+          'nose',
       ],
       entry_points={'nose.plugins':['nostrils=nostrils:Nostrils'],
-              'console_scripts':['nostrils_server=nostrils.server:main']}
+          }
       )

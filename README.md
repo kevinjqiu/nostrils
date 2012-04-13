@@ -7,18 +7,42 @@ A Sample Run
 ------------
 
 ```bash
-[master ✓] $ nosetests --with-nostrils  -s --nostrils-whitelist=sample
+[master ✓] $ nosetests -s --with-nostrils --nostrils-whitelist=sample
 .....
 ----------------------------------------------------------------------
-Ran 5 tests in 0.019s
+Ran 5 tests in 0.026s
 
 OK
-File: /home/kevin/src/nostrils/sample/worker.py
-  2:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add', '/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_add', '/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add___negative']
-  3:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add', '/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_add', '/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add___negative']
-  6:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_subtract']
-  7:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_subtract']
-  10:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi']
-  11:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi']
+File: /Users/kevin/src/nostrils/sample/worker.py
+  2:     z = x + y
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_add
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add___negative
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add
+
+
+  3:     return z
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_add
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add___negative
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_add
+
+
+  6:     z = x - y
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_subtract
+
+
+  7:     return z
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.test_subtract
+
+
+  10:     z = x \
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi
+
+
+  11:         * y
+    * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi
+
+
+  13:     return z
+
   13:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi']
 ```

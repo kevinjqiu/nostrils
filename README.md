@@ -42,5 +42,6 @@ File: /Users/kevin/src/nostrils/sample/worker.py
     * /Users/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi
 
 
-  13:['/home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi']
+  13:     return z
+    * /home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi'
 ```

@@ -17,7 +17,17 @@ class Tracer(object):
         return self.__call__
 
     def _trace_down(self, frame):
+        # TODO: Probably not a good design to ask
+        # collector for the current test context.
+        test = self._collector._current_test
+
         while frame is not None:
+            # If we have traced to the frame where
+            # the test case was invoked,
+            # stop there, because everything down-wards
+            # isn't interesting to us.
+            if frame.f_code == test.__call__.func_code:
+                break
             self._collector.collect(frame)
             frame = frame.f_back
 

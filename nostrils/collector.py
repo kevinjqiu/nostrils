@@ -8,13 +8,29 @@ CWD = os.getcwd()
 class TraceCollector(object):
 
     def __init__(self, whitelist=[]):
-        # { filename : { lineno : [test_case_name] }}
+        self._currentid = 0
+        # { testid : test_case_name }
+        self._testids = {}
+        # { filename : { lineno : [testid] }}
         self._data = defaultdict(
             lambda : defaultdict(
                 lambda : set([])
             )
         )
         self._whitelist = whitelist
+        self._current_test = None
+
+    @property
+    def current_test(self):
+        return self._current_test
+
+    @current_test.setter
+    def current_test(self, value):
+        # pretend contention doesn't exist
+        self._currentid += 1
+        # switching the context to the new test
+        self._current_test = value
+        self._testids[self._currentid] = self._test_case_name(self._current_test)
 
     def should_collect(self, frame):
         if self._whitelist == '*':
@@ -31,9 +47,14 @@ class TraceCollector(object):
     def collect(self, frame):
         filename, lineno = frame.f_code.co_filename, frame.f_lineno
         if self.should_collect(frame):
-            testid = "%s:%s.%s" % self._current_test.address()
-            self._data[filename][lineno].add(testid)
+            self._data[filename][lineno].add(self._currentid)
 
     def save(self):
         with open('.nostrils', 'w') as f:
             json.dump(self._data, f, default=lambda x : list(x))
+
+    def _test_case_name(self, test_case):
+        return "%s:%s.%s" % test_case.address()
+
+    def get_test_case_name_by_id(self, testid):
+        return self._testids[testid]

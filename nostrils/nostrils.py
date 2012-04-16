@@ -19,7 +19,7 @@ class Tracer(object):
     def _trace_down(self, frame):
         # TODO: Probably not a good design to ask
         # collector for the current test context.
-        test = self._collector._current_test
+        test = self._collector.current_test
 
         while frame is not None:
             # If we have traced to the frame where
@@ -63,7 +63,7 @@ class Nostrils(Plugin):
                 line = linecache.getline(filename, lineno)
                 print "%s%s: %s" % (' '*2, lineno, line.rstrip())
                 for testid in data[filename][lineno]:
-                    print "%s* %s" % (' '*4, testid)
+                    print "%s* %s" % (' '*4, self._collector.get_test_case_name_by_id(testid))
                 print "\n"
 
     def add_options(self, parser, env=None):
@@ -86,7 +86,7 @@ class Nostrils(Plugin):
         self._tracer.stop()
 
     def startTest(self, test):
-        self._collector._current_test = test
+        self._collector.current_test = test
         self._tracer.start()
 
     def finalize(self, result):

@@ -52,6 +52,8 @@ class TraceCollector(object):
     def save(self):
         with open('.nostrils', 'w') as f:
             json.dump(self._data, f, default=lambda x : list(x))
+        with open('.nostrils-ids', 'w') as f:
+            json.dump(self._testids, f)
 
     def _test_case_name(self, test_case):
         return "%s:%s.%s" % test_case.address()

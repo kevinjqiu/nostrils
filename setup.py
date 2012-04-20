@@ -19,6 +19,7 @@ setup(name='nostrils',
       zip_safe=False,
       install_requires=[
           'nose',
+          'pyinotify'
       ],
       entry_points={'nose.plugins':['nostrils=nostrils:Nostrils'],
           }

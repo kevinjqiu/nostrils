@@ -6,6 +6,7 @@ from collector import TraceCollector
 
 log = logging.getLogger(__name__)
 
+
 class Tracer(object):
 
     def __init__(self, collector):
@@ -38,6 +39,7 @@ class Tracer(object):
     def stop(self):
         sys.settrace(self._old_tracefn)
 
+
 class Nostrils(Plugin):
 
     name = 'nostrils'
@@ -61,14 +63,15 @@ class Nostrils(Plugin):
             print "File: %s" % filename
             for lineno in sorted(data[filename].keys()):
                 line = linecache.getline(filename, lineno)
-                print "%s%s: %s" % (' '*2, lineno, line.rstrip())
+                print "%s%s: %s" % (' ' * 2, lineno, line.rstrip())
                 for testid in data[filename][lineno]:
-                    print "%s* %s" % (' '*4, self._collector.get_test_case_name_by_id(testid))
+                    print "%s* %s" % (' ' * 4, self._collector.get_test_case_name_by_id(testid))
                 print "\n"
 
     def add_options(self, parser, env=None):
         super(Nostrils, self).add_options(parser, env)
-        parser.add_option('--nostrils-whitelist',
+        parser.add_option(
+            '--nostrils-whitelist',
             dest='whitelist',
             help='A comma separated list of top-level folders to be included, or "*" indicating "all".',
             default='*')

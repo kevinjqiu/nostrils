@@ -5,6 +5,7 @@ from collections import defaultdict
 
 CWD = os.getcwd()
 
+
 class TraceCollector(object):
 
     def __init__(self, whitelist=[]):
@@ -13,8 +14,8 @@ class TraceCollector(object):
         self._testids = {}
         # { filename : { lineno : [testid] }}
         self._data = defaultdict(
-            lambda : defaultdict(
-                lambda : set([])
+            lambda: defaultdict(
+                lambda: set([])
             )
         )
         self._whitelist = whitelist
@@ -51,7 +52,7 @@ class TraceCollector(object):
 
     def save(self):
         with open('.nostrils', 'w') as f:
-            json.dump(self._data, f, default=lambda x : list(x))
+            json.dump(self._data, f, default=lambda x: list(x))
         with open('.nostrils-ids', 'w') as f:
             json.dump(self._testids, f)
 

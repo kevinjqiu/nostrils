@@ -37,7 +37,8 @@ class Tracer(object):
         sys.settrace(self.__call__)
 
     def stop(self):
-        sys.settrace(self._old_tracefn)
+        if hasattr(self, '_old_tracefn'):
+            sys.settrace(self._old_tracefn)
 
 
 class Nostrils(Plugin):
@@ -58,15 +59,16 @@ class Nostrils(Plugin):
             self._tracer = Tracer(self._collector)
 
     def _print(self):
-        data = self._collector._data
-        for filename in data:
-            print "File: %s" % filename
-            for lineno in sorted(data[filename].keys()):
-                line = linecache.getline(filename, lineno)
-                print "%s%s: %s" % (' ' * 2, lineno, line.rstrip())
-                for testid in data[filename][lineno]:
-                    print "%s* %s" % (' ' * 4, self._collector.get_test_case_name_by_id(testid))
-                print "\n"
+        print "Done"
+        # data = self._collector._data
+        # for filename in data:
+        #     print "File: %s" % filename
+        #     for lineno in sorted(data[filename].keys()):
+        #         line = linecache.getline(filename, lineno)
+        #         print "%s%s: %s" % (' ' * 2, lineno, line.rstrip())
+        #         for testid in data[filename][lineno]:
+        #             print "%s* %s" % (' ' * 4, self._collector.get_test_case_name_by_id(testid))
+        #         print "\n"
 
     def add_options(self, parser, env=None):
         super(Nostrils, self).add_options(parser, env)

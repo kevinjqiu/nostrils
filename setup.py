@@ -21,6 +21,6 @@ setup(name='nostrils',
           'nose',
           'pyinotify'
       ],
-      entry_points={'nose.plugins':['nostrils=nostrils:Nostrils'],
+      entry_points={'nose.plugins':['nostrils=nostrils.nostrils:Nostrils'],
           }
       )

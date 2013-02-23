@@ -1,3 +1,4 @@
-from nostrils import Nostrils
+# from nostrils import Nostrils
 
-__all__ = [Nostrils.__class__.__name__]
+
+# __all__ = ['Nostrils', 'db']

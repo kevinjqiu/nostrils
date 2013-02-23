@@ -1,23 +1,56 @@
 import os
 import os.path
-import json
-from collections import defaultdict
+import sqlite3
+# from collections import defaultdict
 
 CWD = os.getcwd()
+
+
+SCHEMATA = [
+    'CREATE TABLE tests ('
+    '  id INTEGER AUTO_INCREMENT,'
+    '  test_case_name VARCHAR(255),'
+    '  PRIMARY KEY (id));',
+    'CREATE TABLE coverage ('
+    '  id INTEGER AUTO_INCREMENT,'
+    '  filename VARCHAR(255),'
+    '  lineno INTEGER,'
+    '  test_id INTEGER,'
+    '  PRIMARY KEY (id),'
+    '  FOREIGN KEY(test_id) REFERENCES tests(id));',
+]
+
+
+conn = sqlite3.connect('nostrils.db')
+
+
+def create_db():
+    for stmt in SCHEMATA:
+        conn.execute(stmt)
+
+
+def commit():
+    conn.commit()
+
+
+def add_test(test_case_name):
+    cursor = conn.execute(
+        'INSERT INTO tests(test_case_name) VALUES(?)', (test_case_name,))
+    return cursor.lastrowid
+
+
+def add_coverage(filename, lineno, test_id):
+    cursor = conn.execute(
+        'INSERT INTO coverage(filename, lineno, test_id) VALUES(?, ?, ?)', (
+            filename, lineno, test_id))
+    return cursor.lastrowid
 
 
 class TraceCollector(object):
 
     def __init__(self, whitelist=[]):
         self._currentid = 0
-        # { testid : test_case_name }
         self._testids = {}
-        # { filename : { lineno : [testid] }}
-        self._data = defaultdict(
-            lambda: defaultdict(
-                lambda: set([])
-            )
-        )
         self._whitelist = whitelist
         self._current_test = None
 
@@ -27,11 +60,10 @@ class TraceCollector(object):
 
     @current_test.setter
     def current_test(self, value):
-        # pretend contention doesn't exist
-        self._currentid += 1
-        # switching the context to the new test
+        test_case_name = self._test_case_name(value)
         self._current_test = value
-        self._testids[self._currentid] = self._test_case_name(self._current_test)
+        testid = add_test(test_case_name)
+        self._testids[test_case_name] = testid
 
     def should_collect(self, frame):
         if self._whitelist == '*':
@@ -48,13 +80,12 @@ class TraceCollector(object):
     def collect(self, frame):
         filename, lineno = frame.f_code.co_filename, frame.f_lineno
         if self.should_collect(frame):
-            self._data[filename][lineno].add(self._currentid)
+            test_case_name = self._test_case_name(self._current_test)
+            add_coverage(
+                filename, lineno, self._testids[test_case_name])
 
     def save(self):
-        with open('.nostrils', 'w') as f:
-            json.dump(self._data, f, default=lambda x: list(x))
-        with open('.nostrils-ids', 'w') as f:
-            json.dump(self._testids, f)
+        commit()
 
     def _test_case_name(self, test_case):
         return "%s:%s.%s" % test_case.address()

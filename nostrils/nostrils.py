@@ -29,6 +29,8 @@ class Tracer(object):
             # isn't interesting to us.
             if frame.f_code == test.__call__.func_code:
                 break
+            if not self._collector.should_collect(frame):
+                break
             self._collector.collect(frame)
             frame = frame.f_back
 

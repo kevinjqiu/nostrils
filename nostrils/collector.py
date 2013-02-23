@@ -47,8 +47,7 @@ class TraceCollector(object):
 
     def collect(self, frame):
         filename, lineno = frame.f_code.co_filename, frame.f_lineno
-        if self.should_collect(frame):
-            self._data[filename][lineno].add(self._currentid)
+        self._data[filename][lineno].add(self._currentid)
 
     def save(self):
         with open('.nostrils', 'w') as f:

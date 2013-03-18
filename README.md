@@ -51,3 +51,8 @@ File: /Users/kevin/src/nostrils/sample/worker.py
   13:     return z
     * /home/kevin/src/nostrils/test/test_worker.py:test.test_worker.TestFoo.test_multi
 ```
+
+TODO
+====
+
+* A GUI app for viewing test coverage data.

@@ -78,17 +78,16 @@ class Nostrils(Plugin):
             help='A comma separated list of top-level folders to be included, or "*" indicating "all".',
             default='*')
 
-    def addError(self, test, err, *args):
+    def _stop_tracer(self):
         self._tracer.stop()
 
-    def addFailure(self, test, err, *args):
-        self._tracer.stop()
+    addError = _stop_tracer
 
-    def addSkip(self, test, *args):
-        self._tracer.stop()
+    addFailure = _stop_tracer
 
-    def addSuccess(self, test, *args):
-        self._tracer.stop()
+    addSkip = _stop_tracer
+
+    addSuccess = _stop_tracer
 
     def startTest(self, test):
         self._collector.current_test = test

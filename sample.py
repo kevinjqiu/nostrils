@@ -5,7 +5,7 @@ from pyinotify import ALL_EVENTS
 wm = WatchManager()
 
 def cb(s):
-    pass
+    print s
 
 def process_event(event, *args, **kwargs):
     print event

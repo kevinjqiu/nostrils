@@ -55,7 +55,10 @@ class Nostrils(Plugin):
         super(Nostrils, self).configure(options, conf)
 
         if self.enabled:
-            whitelist = '*' if options.whitelist == '*' else options.whitelist.split(',')
+            whitelist = (
+                '*' if options.whitelist == '*'
+                else options.whitelist.split(',')
+            )
             self._collector = TraceCollector(whitelist)
             self._tracer = Tracer(self._collector)
 
@@ -75,10 +78,13 @@ class Nostrils(Plugin):
         parser.add_option(
             '--nostrils-whitelist',
             dest='whitelist',
-            help='A comma separated list of top-level folders to be included, or "*" indicating "all".',
+            help=(
+                'A comma separated list of top-level folders to be included, '
+                'or "*" indicating "all".'
+            ),
             default='*')
 
-    def _stop_tracer(self):
+    def _stop_tracer(self, *args, **kwargs):
         self._tracer.stop()
 
     addError = _stop_tracer

@@ -56,7 +56,14 @@ class TraceCollector(object):
             json.dump(self._testids, f)
 
     def _test_case_name(self, test_case):
-        return "%s:%s.%s" % test_case.address()
+        if hasattr(test_case, 'id'):
+            return test_case.id()
+        elif hasattr(test_case, 'address'):
+            return "%s:%s.%s" % test_case.address()
+        else:
+            raise ValueError(
+                'Neither `id` or `address` is present for the test case %r'
+                % test_case)
 
     def get_test_case_name_by_id(self, testid):
         return self._testids[testid]

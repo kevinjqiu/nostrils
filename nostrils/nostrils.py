@@ -8,7 +8,6 @@ log = logging.getLogger(__name__)
 
 
 class Tracer(object):
-
     def __init__(self, collector):
         self._collector = collector
 
@@ -43,7 +42,6 @@ class Tracer(object):
 
 
 class Nostrils(Plugin):
-
     name = 'nostrils'
 
     def __init__(self):

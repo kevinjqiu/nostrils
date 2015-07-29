@@ -7,7 +7,6 @@ CWD = os.getcwd()
 
 
 class TraceCollector(object):
-
     def __init__(self, whitelist=[]):
         self._currentid = 0
         # { testid : test_case_name }
